@@ -4,6 +4,7 @@ import pandas as pd
 import joblib
 from datetime import datetime, UTC
 import os
+import numpy as np
 
 st.set_page_config(
     page_title="DOTD Predictor",
@@ -265,6 +266,7 @@ def make_preds(sport: str, df: pd.DataFrame, model):
     x = df_dummies.reindex(columns=EXPECTED_COLUMNS[sport], fill_value=0)
 
     preds = model.predict(x)
+    preds = np.maximum(preds, df['votes'].values)  
     df['predicted_final_votes'] = preds.astype(int)
     df['rank'] = df['predicted_final_votes'].rank(ascending=False, method='min').astype(int)
     return df[['team_name', 'votes', 'placement', 'predicted_final_votes', 'rank']].sort_values('rank')
