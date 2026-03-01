@@ -3,3 +3,4 @@ requests
 pandas
 joblib
 scikit-learn
+xgboost
